@@ -20,6 +20,7 @@ export default ({ options, nuxt, renderRoute, resources }) =>
         return;
       }
 
+<<<<<<< HEAD
       await nuxt.callHook("render:route", url, result, context);
       const {
         html,
@@ -35,6 +36,26 @@ export default ({ options, nuxt, renderRoute, resources }) =>
       }
       if (error) {
         res.statusCode = context.nuxt.error.statusCode || 500;
+=======
+    if (options.render.csp && cspScriptSrcHashes) {
+      const { allowedSources, policies } = options.render.csp
+      const isReportOnly = !!options.render.csp.reportOnly
+      const cspHeader = isReportOnly ? 'Content-Security-Policy-Report-Only' : 'Content-Security-Policy'
+
+      res.setHeader(cspHeader, getCspString({ cspScriptSrcHashes, allowedSources, policies, isReportOnly }))
+    }
+
+    // Add ETag header
+    if (!error && options.render.etag) {
+      const { hash } = options.render.etag
+      const etag = hash ? hash(html, options.render.etag) : generateETag(html, options.render.etag)
+      if (fresh(req.headers, { etag })) {
+        res.statusCode = 304
+        await nuxt.callHook('render:beforeResponse', url, result, context)
+        res.end()
+        await nuxt.callHook('render:routeDone', url, result, context)
+        return
+>>>>>>> feab4516934266ce2760c08ad3d9eb33712f0760
       }
 
       // Add ETag header
@@ -53,6 +74,7 @@ export default ({ options, nuxt, renderRoute, resources }) =>
         res.setHeader("ETag", etag);
       }
 
+<<<<<<< HEAD
       // HTTP2 push headers for preload assets
       if (!error && options.render.http2.push) {
         // Parse resourceHints to extract HTTP.2 prefetch/push headers
@@ -103,6 +125,21 @@ export default ({ options, nuxt, renderRoute, resources }) =>
         consola.error(err);
         return err;
       }
+=======
+    // Send response
+    res.setHeader('Content-Type', 'text/html; charset=utf-8')
+    res.setHeader('Accept-Ranges', 'none') // #3870
+    res.setHeader('Content-Length', Buffer.byteLength(html))
+    await nuxt.callHook('render:beforeResponse', url, result, context)
+    res.end(html, 'utf8')
+    await nuxt.callHook('render:routeDone', url, result, context)
+    return html
+  } catch (err) {
+    if (context && context.redirected) {
+      consola.error(err)
+      return err
+    }
+>>>>>>> feab4516934266ce2760c08ad3d9eb33712f0760
 
       if (err.name === "URIError") {
         err.statusCode = 400;

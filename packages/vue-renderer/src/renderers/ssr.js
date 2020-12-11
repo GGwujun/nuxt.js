@@ -49,8 +49,17 @@ export default class SSRRenderer extends BaseRenderer {
     );
   }
 
+<<<<<<< HEAD
   renderScripts(renderContext) {
     return this.addAttrs(renderContext.renderScripts(), "script");
+=======
+  renderScripts (renderContext) {
+    let renderedScripts = this.addAttrs(renderContext.renderScripts(), 'script')
+    if (this.options.render.asyncScripts) {
+      renderedScripts = renderedScripts.replace(/defer>/g, 'defer async>')
+    }
+    return renderedScripts
+>>>>>>> feab4516934266ce2760c08ad3d9eb33712f0760
   }
 
   renderStyles(renderContext) {
@@ -197,11 +206,18 @@ export default class SSRRenderer extends BaseRenderer {
     const inlineScripts = [];
 
     if (renderContext.staticAssetsBase) {
+<<<<<<< HEAD
       const preloadScripts = [];
       renderContext.staticAssets = [];
       const routerBase = this.options.router.base;
       const { staticAssetsBase, url, nuxt, staticAssets } = renderContext;
       const { data, fetch, mutations, ...state } = nuxt;
+=======
+      const preloadScripts = []
+      renderContext.staticAssets = []
+      const { staticAssetsBase, url, nuxt, staticAssets } = renderContext
+      const { data, fetch, mutations, ...state } = nuxt
+>>>>>>> feab4516934266ce2760c08ad3d9eb33712f0760
 
       // Initial state
       const stateScript = `window.${
@@ -214,15 +230,28 @@ export default class SSRRenderer extends BaseRenderer {
       // Make chunk for initial state > 10 KB
       const stateScriptKb = (stateScript.length * 4) /* utf8 */ / 100;
       if (stateScriptKb > 10) {
+<<<<<<< HEAD
         const statePath = urlJoin(url, "state.js");
         const stateUrl = urlJoin(routerBase, staticAssetsBase, statePath);
         staticAssets.push({ path: statePath, src: stateScript });
         APP += `<script defer src="${stateUrl}"></script>`;
         preloadScripts.push(stateUrl);
+=======
+        const statePath = urlJoin(url, 'state.js')
+        const stateUrl = urlJoin(staticAssetsBase, statePath)
+        staticAssets.push({ path: statePath, src: stateScript })
+        if (this.options.render.asyncScripts) {
+          APP += `<script defer async src="${stateUrl}"></script>`
+        } else {
+          APP += `<script defer src="${stateUrl}"></script>`
+        }
+        preloadScripts.push(stateUrl)
+>>>>>>> feab4516934266ce2760c08ad3d9eb33712f0760
       } else {
         APP += `<script>${stateScript}</script>`;
       }
 
+<<<<<<< HEAD
       // Page level payload.js (async loaded for CSR)
       const payloadPath = urlJoin(url, "payload.js");
       const payloadUrl = urlJoin(routerBase, staticAssetsBase, payloadPath);
@@ -234,6 +263,23 @@ export default class SSRRenderer extends BaseRenderer {
       })});`;
       staticAssets.push({ path: payloadPath, src: payloadScript });
       preloadScripts.push(payloadUrl);
+=======
+      // Save payload only if no error or redirection were made
+      if (!renderContext.nuxt.error && !renderContext.redirected) {
+        // Page level payload.js (async loaded for CSR)
+        const payloadPath = urlJoin(url, 'payload.js')
+        const payloadUrl = urlJoin(staticAssetsBase, payloadPath)
+        const routePath = (url.replace(/\/+$/, '') || '/').split('?')[0] // remove trailing slah and query params
+        const payloadScript = `__NUXT_JSONP__("${routePath}", ${devalue({ data, fetch, mutations })});`
+        staticAssets.push({ path: payloadPath, src: payloadScript })
+        preloadScripts.push(payloadUrl)
+        // Add manifest preload
+        if (this.options.generate.manifest) {
+          const manifestUrl = urlJoin(staticAssetsBase, 'manifest.js')
+          preloadScripts.push(manifestUrl)
+        }
+      }
+>>>>>>> feab4516934266ce2760c08ad3d9eb33712f0760
 
       // Preload links
       for (const href of preloadScripts) {

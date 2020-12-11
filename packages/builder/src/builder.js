@@ -24,9 +24,14 @@ import {
   stripWhitespace,
   isIndexFileAndFolder,
   scanRequireTree,
+<<<<<<< HEAD
   TARGETS,
   isFullStatic
 } from "@nuxt/utils";
+=======
+  TARGETS
+} from '@nuxt/utils'
+>>>>>>> feab4516934266ce2760c08ad3d9eb33712f0760
 
 import Ignore from "./ignore";
 import BuildContext from "./context/build";
@@ -144,10 +149,14 @@ export default class Builder {
       } else {
         consola.info(`Bundling only for ${chalk.bold.green("client")} side`);
       }
+<<<<<<< HEAD
       const target = isFullStatic(this.options)
         ? "full static"
         : this.options.target;
       consola.info(`Target: ${chalk.bold.cyan(target)}`);
+=======
+      consola.info(`Target: ${chalk.bold.cyan(this.options.target)}`)
+>>>>>>> feab4516934266ce2760c08ad3d9eb33712f0760
     }
 
     // Wait for nuxt ready
@@ -426,9 +435,15 @@ export default class Builder {
         trailingSlash
       });
     } else if (this._nuxtPages) {
+<<<<<<< HEAD
       // Use nuxt.js createRoutes bases on pages/
       const files = {};
       const ext = new RegExp(`\\.(${this.supportedExtensions.join("|")})$`);
+=======
+      // Use nuxt createRoutes bases on pages/
+      const files = {}
+      const ext = new RegExp(`\\.(${this.supportedExtensions.join('|')})$`)
+>>>>>>> feab4516934266ce2760c08ad3d9eb33712f0760
       for (const page of await this.resolveFiles(this.options.dir.pages)) {
         const key = page.replace(ext, "");
         // .vue file takes precedence over other extensions

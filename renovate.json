@@ -7,22 +7,13 @@
   ],
   "ignoreDeps": [
     "core-js",
-    "memory-fs",
-    "execa",
-    "pify",
-    "file-loader",
-    "url-loader",
-    "sass-loader",
-    "css-loader",
     "postcss",
+    "postcss-import",
     "postcss-loader",
-    "thread-loader",
-    "fs-extra",
-    "chalk",
-    "wrap-ansi",
+    "postcss-url",
+    "css-loader",
     "terser-webpack-plugin",
-    "@types/terser-webpack-plugin",
-    "defu"
+    "@types/terser-webpack-plugin"
   ],
   "lockFileMaintenance": {
     "enabled": true

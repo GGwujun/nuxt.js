@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import execa from "execa";
 import { name as pkgName } from "../package.json";
 import NuxtCommand from "./command";
@@ -22,6 +23,24 @@ export default async function run(_argv, hooks = {}) {
     throw new Error(
       "Both `nuxt` and `nuxt-edge` dependencies are installed! This is unsupported, please choose one and remove the other one from dependencies."
     );
+=======
+import { existsSync } from 'fs'
+import { resolve } from 'path'
+import execa from 'execa'
+import consola from 'consola'
+import { name as pkgName } from '../package.json'
+import NuxtCommand from './command'
+import setup from './setup'
+import getCommand from './commands'
+import { isNuxtDir } from './utils/dir'
+
+export default async function run (_argv, hooks = {}) {
+  // Check for not installing both nuxt and nuxt-edge
+  const dupPkg = pkgName === '@nuxt/cli-edge' ? 'cli' : 'cli-edge'
+  const dupPkgJSON = resolve(__dirname, '../..' /* dist/../.. */, dupPkg, 'package.json')
+  if (existsSync(dupPkgJSON) && require(dupPkgJSON).name !== '@nuxt/' + dupPkg) {
+    consola.warn('Both `nuxt` and `nuxt-edge` dependencies are installed! Please choose one and remove the other one from dependencies.')
+>>>>>>> feab4516934266ce2760c08ad3d9eb33712f0760
   }
 
   // Read from process.argv

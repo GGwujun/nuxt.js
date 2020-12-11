@@ -1,8 +1,17 @@
+<<<<<<< HEAD
 import path from "path";
 import fs from "fs-extra";
 import consola from "consola";
 import template from "lodash/template";
 import { TARGETS, isModernRequest, waitFor } from "@nuxt/utils";
+=======
+import path from 'path'
+import fs from 'fs-extra'
+import consola from 'consola'
+import template from 'lodash/template'
+import { TARGETS, isModernRequest, waitFor } from '@nuxt/utils'
+import { normalizeURL } from '@nuxt/ufo'
+>>>>>>> feab4516934266ce2760c08ad3d9eb33712f0760
 
 import SPARenderer from "./renderers/spa";
 import SSRRenderer from "./renderers/ssr";
@@ -27,8 +36,13 @@ export default class VueRenderer {
       serverManifest: undefined,
       ssrTemplate: undefined,
       spaTemplate: undefined,
+<<<<<<< HEAD
       errorTemplate: this.parseTemplate("Nuxt.js Internal Server Error")
     });
+=======
+      errorTemplate: this.parseTemplate('Nuxt Internal Server Error')
+    })
+>>>>>>> feab4516934266ce2760c08ad3d9eb33712f0760
 
     // Default status
     this._state = "created";
@@ -309,7 +323,12 @@ export default class VueRenderer {
     consola.debug(`Rendering url ${url}`);
 
     // Add url to the renderContext
+<<<<<<< HEAD
     renderContext.url = url;
+=======
+    renderContext.url = normalizeURL(url)
+
+>>>>>>> feab4516934266ce2760c08ad3d9eb33712f0760
     // Add target to the renderContext
     renderContext.target = this.options.target;
 

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import path from "path";
 import consola from "consola";
 import launchMiddleware from "launch-editor-middleware";
@@ -12,6 +13,22 @@ import nuxtMiddleware from "./middleware/nuxt";
 import errorMiddleware from "./middleware/error";
 import Listener from "./listener";
 import createTimingMiddleware from "./middleware/timing";
+=======
+import path from 'path'
+import consola from 'consola'
+import launchMiddleware from 'launch-editor-middleware'
+import serveStatic from 'serve-static'
+import servePlaceholder from 'serve-placeholder'
+import connect from 'connect'
+import { determineGlobals, isUrl, urlJoin } from '@nuxt/utils'
+
+import ServerContext from './context'
+import renderAndGetWindow from './jsdom'
+import nuxtMiddleware from './middleware/nuxt'
+import errorMiddleware from './middleware/error'
+import Listener from './listener'
+import createTimingMiddleware from './middleware/timing'
+>>>>>>> feab4516934266ce2760c08ad3d9eb33712f0760
 
 export default class Server {
   constructor(nuxt) {
@@ -162,6 +179,25 @@ export default class Server {
         resources: this.resources
       })
     );
+
+    // DX: redirect if router.base in development
+    const routerBase = this.nuxt.options.router.base
+    if (this.options.dev && routerBase !== '/') {
+      this.useMiddleware({
+        prefix: false,
+        handler: (req, res, next) => {
+          if (decodeURI(req.url).startsWith(decodeURI(routerBase))) {
+            return next()
+          }
+          const to = urlJoin(routerBase, req.url)
+          consola.info(`[Development] Redirecting from \`${decodeURI(req.url)}\` to \`${decodeURI(to)}\` (router.base specified)`)
+          res.writeHead(302, {
+            Location: to
+          })
+          res.end()
+        }
+      })
+    }
 
     // Apply errorMiddleware from modules first
     await this.nuxt.callHook("render:errorMiddleware", this.app);
