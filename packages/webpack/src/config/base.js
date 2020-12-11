@@ -73,6 +73,7 @@ export default class WebpackBaseConfig {
     return [
       /\.vue\.js/i, // include SFCs in node_modules
       /consola\/src/,
+      /@nuxt[/\\]ufo/, // exports modern syntax for browser field
       ...this.normalizeTranspile({ pathNormalize: true })
     ]
   }
@@ -254,7 +255,7 @@ export default class WebpackBaseConfig {
           },
           terserOptions: {
             compress: {
-              ecma: this.isModern ? 6 : undefined
+              ecma: this.isModern ? 2015 : undefined
             },
             mangle: {
               reserved: reservedVueTags
@@ -316,7 +317,7 @@ export default class WebpackBaseConfig {
       {
         test: /\.m?jsx?$/i,
         exclude: (file) => {
-          file = file.split('node_modules', 2)[1]
+          file = file.split(/node_modules(.*)/)[1]
 
           // not exclude files outside node_modules
           if (!file) {
